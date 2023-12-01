@@ -6,16 +6,17 @@ class ExampleTwo extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useTextEditingController();
+    final textController = useTextEditingController();
     final text = useState('');
+
     useEffect(
       () {
-        controller.addListener(() {
-          text.value = controller.text;
+        textController.addListener(() {
+          text.value = textController.text;
         });
         return null;
       },
-      [controller],
+      [textController],
     );
 
     return Scaffold(
@@ -29,13 +30,14 @@ class ExampleTwo extends HookWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: TextField(
-              controller: controller,
+              controller: textController,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               )),
             ),
-          )
+          ),
+          Text(' You typed ${text.value}'),
         ],
       ),
     );
