@@ -19,8 +19,8 @@ class ExampleThree extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = useFuture(
-      NetworkAssetBundle(Uri.parse(url))
+    final image = useMemoized(
+      () => NetworkAssetBundle(Uri.parse(url))
           .load(url)
           .then(
             (data) => data.buffer.asUint8List(),
@@ -30,6 +30,8 @@ class ExampleThree extends HookWidget {
           ),
     );
 
+    final snapshot = useFuture(image);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
@@ -37,7 +39,7 @@ class ExampleThree extends HookWidget {
       ),
       body: Column(
         children: [
-          image.hasData ? image.data! : null,
+          snapshot.hasData ? snapshot.data! : null,
         ].compactMap().toList(),
       ),
     );
