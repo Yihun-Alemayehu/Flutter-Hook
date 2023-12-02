@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class ExampleTwo extends HookWidget {
-  const ExampleTwo({super.key});
+extension CompactMap<T> on Iterable<T?> {
+  
+}
+
+class ExampleThree extends HookWidget {
+  const ExampleThree({super.key});
 
   @override
   Widget build(BuildContext context) {
