@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 extension CompactMap<T> on Iterable<T?> {
-  
+  Iterable<T> compactMap<E>([
+    E? Function(T?)? transform,
+  ]) =>
+      map(
+        transform ?? (e) => e,
+      ).where((e) => e != null).cast();
 }
+
+const url =
+    'https://c4.wallpaperflare.com/wallpaper/851/501/292/programming-code-minimalism-wallpaper-preview.jpg';
 
 class ExampleThree extends HookWidget {
   const ExampleThree({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textController = useTextEditingController();
-    final text = useState('');
-
-    useEffect(
-      () {
-        textController.addListener(() {
-          text.value = textController.text;
-        });
-        return null;
-      },
-      [textController],
+    final image = useFuture(
+      NetworkAssetBundle(Uri.parse(url))
+          .load(url)
+          .then(
+            (data) => data.buffer.asUint8List(),
+          )
+          .then(
+            (data) => Image.memory(data),
+          ),
     );
 
     return Scaffold(
@@ -29,23 +36,9 @@ class ExampleThree extends HookWidget {
         centerTitle: true,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextField(
-              controller: textController,
-              decoration: InputDecoration(
-                  hintText: 'Type here',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  )),
-            ),
-          ),
-          text.value.isNotEmpty
-              ? Text(' You typed ${text.value}')
-              : const Text(''),
-        ],
+          image.hasData ? image.data! : null,
+        ].compactMap().toList(),
       ),
     );
   }
