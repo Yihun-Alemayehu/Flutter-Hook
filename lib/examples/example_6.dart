@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -10,6 +9,12 @@ class ExampleSix extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    late final StreamController<double> controller;
+    controller = useStreamController<double>(
+      onListen: () {
+        controller.sink.add(0.0);
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -20,6 +25,9 @@ class ExampleSix extends HookWidget {
           ),
         ),
         centerTitle: true,
+      ),
+      body: Center(
+        child: Image.network(url),
       ),
     );
   }
